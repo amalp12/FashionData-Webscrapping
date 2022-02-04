@@ -9,18 +9,21 @@ import csv
 from selenium.webdriver.chrome.service import Service
 
 global counter
+global num_pages
 counter = 0
+num_pages = 1410
+
 
 class Flipkart():
 
-    def __init__(self):
+    def __init__(self,url):
 
         self.driver_path = r'/home/amal/Downloads/Chrome Driver/chromedriver_linux64/chromedriver'#'chromedriver'
         self.service = Service(executable_path=self.driver_path)
         self.options = webdriver.ChromeOptions()
         # Here i get path of current workind directory
         self.current_path = os.getcwd()
-        self.url = 'https://www.myntra.com/women-kurtas-kurtis-suits'
+        self.url = url
         # Chromedriver is just like a chrome. you can dowload latest by it website
         self.driver = webdriver.Chrome(service=self.service, options=self.options)
 
@@ -113,11 +116,19 @@ class Flipkart():
         # Here we also need to close Csv file which I generated above
         self.file_csv.close()
 
-if __name__ == "__main__":
+    def set_url(self,url):
 
-    Flipkart = Flipkart()
-    Flipkart.page_load()
-    Flipkart.create_csv_file()
-    Flipkart.data_scrap()
-    Flipkart.tearDown()
-    print("Task completed")
+        self.url = url
+
+if __name__ == "__main__":
+    current_page = 1
+    flipkart = Flipkart('')
+    while current_page <= num_pages:
+        url = f'https://www.myntra.com/women-kurtas-kurtis-suits?p={current_page}'
+        flipkart.set_url(url)
+        flipkart.page_load()
+        flipkart.create_csv_file()
+        flipkart.data_scrap()
+        print(f"Task completed for page {current_page}")
+        current_page += 1
+    flipkart.tearDown()
